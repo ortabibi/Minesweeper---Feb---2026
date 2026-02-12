@@ -1,0 +1,28 @@
+h1 {
+    text-align: center;
+}
+
+table {
+    margin: 60px auto;
+    border: 1px solid lightgray;
+    border-collapse: collapse;
+}
+
+.cell {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid;
+}
+
+td{
+    background-color: lightgray;
+}
+
+.board-container {
+    border-collapse: collapse;
+}
