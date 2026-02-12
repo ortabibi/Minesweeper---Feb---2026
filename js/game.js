@@ -1,5 +1,6 @@
 'use strict'
 const MINE = '&#128163;'
+const FLAG = '&#9873;'
 
 const gGame = {
     isOn: false,
@@ -14,6 +15,10 @@ const gLevel = {
 }
 
 var gBoard
+var firstClick = false
+var firstI
+var firstJ
+
 
 function onInit() {
 
@@ -38,10 +43,8 @@ function buildBoard() {
         }
     }
 
-    board[2][3].isMine = true
-    board[0][1].isMine = true
-    // addRandomMine(board, gLevel.MINES)
-    setMinesNegsCountForBoard(board)
+    // board[2][3].isMine = true
+    // board[0][1].isMine = true
     return board
 }
 
@@ -79,6 +82,9 @@ function renderBoard(board) {
                     cellContent = cell.minesAroundCount
                 }
             }
+            if (cell.isMarked) {
+                cellContent = FLAG
+            }
             strHTML += `<td onclick="onCellClicked(this, ${i}, ${j})" 
             class="${className}">
             ${cellContent}
@@ -88,19 +94,39 @@ function renderBoard(board) {
     }
     const elContainer = document.querySelector('.board-container')
     elContainer.innerHTML = strHTML
+
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[0].length; j++) {
+            const elCell = document.querySelector(`.cell-${i}-${j}`)
+            elCell.addEventListener('contextmenu', (event) => {
+                onCellMarked(event, elCell, i, j)
+            })
+        }
+    }
 }
 
 function onCellClicked(elCell, i, j) {
     gBoard[i][j].isRevealed = true
+    if (!firstClick) {
+        addRandomMine(gBoard, gLevel.MINES)
+        setMinesNegsCountForBoard(gBoard)
+        firstClick = true
+        firstI = i
+        firstJ = j
+    }
     renderBoard(gBoard)
 }
 
-function onCellMarked(elCell, i, j) {
+function onCellMarked(event, elCell, i, j) {
+    event.preventDefault()
+    if (event.button === 2) {
+        gBoard[i][j].isMarked = !gBoard[i][j].isMarked
 
+    }
+    renderBoard(gBoard)
 }
 
 function checkGameOver() {
-
 }
 
 function expandReveal(board, elCell, i, j) {

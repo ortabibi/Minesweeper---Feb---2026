@@ -31,7 +31,11 @@ function getEmptyCell(board) {
 function addRandomMine(board, num) {
     for (var i = 0; i < num; i++) {
         var emptyCell = getEmptyCell(board)
-        board[emptyCell.i][emptyCell.j].isMine = true
+        if (emptyCell.i === firstI && emptyCell.j === firstJ) {
+            board[emptyCell.i][emptyCell.j].isMine = false
+        } else {
+            board[emptyCell.i][emptyCell.j].isMine = true
+        }
     }
 }
 
