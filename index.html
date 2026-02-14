@@ -11,11 +11,17 @@
 <body onload="onInit()">
     <h1>Minesweeper game-or tabibi</h1>
 
-    <div class="lives"><SPAN>3</SPAN> LIVES LEFT</div>
+    <div class="lives"><SPAN>3</SPAN> LIVES LEFT |
+        <span>00:00</span>
+    </div>
 
-    <table>
-        <tbody class="board-container"></tbody>
-    </table>
+    <div class="smiley-container">
+        <button class="reset" onclick="onInit()">&#128512</button>
+    </div>
+
+        <table>
+            <tbody class="board-container"></tbody>
+        </table>
     </div>
 
     <script src="js/game.js"></script>

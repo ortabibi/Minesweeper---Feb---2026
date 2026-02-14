@@ -3,7 +3,7 @@ h1 {
 }
 
 table {
-    margin: 40px auto;
+    margin: 30px auto;
     border: 1px solid lightgray;
     border-collapse: collapse;
 }
@@ -29,5 +29,10 @@ td{
 
 .lives{
     font-size: 20px;
+    text-align: center;
+}
+
+.smiley-container{
+    margin: 10px;
     text-align: center;
 }

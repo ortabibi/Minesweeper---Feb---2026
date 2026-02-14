@@ -1,6 +1,10 @@
 'use strict'
 const MINE = '&#128163;'
 const FLAG = '&#9873;'
+const NORMAL = '&#128512;'
+const SAD = '&#128534;'
+const WIN = '&#128526;'
+
 
 const gGame = {
     isOn: false,
@@ -22,6 +26,7 @@ var firstJ
 
 
 function onInit() {
+    resetGame()
     gGame.isOn = true
     gBoard = buildBoard()
     renderBoard(gBoard)
@@ -126,12 +131,13 @@ function onCellClicked(elCell, i, j) {
         gBoard[i][j].isRevealed = false
 
         if (gGame.lives === 0) {
+            document.querySelector('.reset').innerHTML = SAD
             console.log('game over!')
             gGame.isOn = false
             return
         }
     }
-    
+
     renderBoard(gBoard)
     checkGameOver()
 }
@@ -156,9 +162,20 @@ function checkGameOver() {
         }
     }
     gGame.isOn = false
+    document.querySelector('.reset').innerHTML = WIN
     console.log('you win!')
 }
 
 function expandReveal(board, elCell, i, j) {
 
+}
+
+function resetGame() {
+    console.log('the game has restarted');
+    document.querySelector('.reset').innerHTML = NORMAL
+    firstI = null
+    firstJ = null
+    firstClick = false
+    document.querySelector('.lives span').innerHTML = 3
+    gGame.lives = 3
 }
