@@ -6,12 +6,13 @@ const gGame = {
     isOn: false,
     revealedCount: 0,
     markedCount: 0,
-    secsPassed: 0
+    secsPassed: 0,
+    lives: 3
 }
 
 const gLevel = {
     SIZE: 4,
-    MINES: 2
+    MINES: 3
 }
 
 var gBoard
@@ -21,7 +22,7 @@ var firstJ
 
 
 function onInit() {
-
+    gGame.isOn = true
     gBoard = buildBoard()
     renderBoard(gBoard)
 }
@@ -106,27 +107,56 @@ function renderBoard(board) {
 }
 
 function onCellClicked(elCell, i, j) {
-    gBoard[i][j].isRevealed = true
+    if (!gGame.isOn) return
+    if (gBoard[i][j].isRevealed) return
+    if (gBoard[i][j].isMarked) return
+
     if (!firstClick) {
-        addRandomMine(gBoard, gLevel.MINES)
-        setMinesNegsCountForBoard(gBoard)
         firstClick = true
         firstI = i
         firstJ = j
+        addRandomMine(gBoard, gLevel.MINES)
+        setMinesNegsCountForBoard(gBoard)
     }
+
+    gBoard[i][j].isRevealed = true
+
+    if (gBoard[i][j].isMine) {
+        updateLives(1)
+        gBoard[i][j].isRevealed = false
+
+        if (gGame.lives === 0) {
+            console.log('game over!')
+            gGame.isOn = false
+            return
+        }
+    }
+    
     renderBoard(gBoard)
+    checkGameOver()
 }
 
 function onCellMarked(event, elCell, i, j) {
+    if (!gGame.isOn) return
     event.preventDefault()
     if (event.button === 2) {
+        if (gBoard[i][j].isRevealed) return
         gBoard[i][j].isMarked = !gBoard[i][j].isMarked
 
     }
     renderBoard(gBoard)
+    checkGameOver()
 }
 
 function checkGameOver() {
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[0].length; j++) {
+            var cell = gBoard[i][j]
+            if (!cell.isRevealed && !cell.isMine) return
+        }
+    }
+    gGame.isOn = false
+    console.log('you win!')
 }
 
 function expandReveal(board, elCell, i, j) {

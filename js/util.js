@@ -33,9 +33,17 @@ function addRandomMine(board, num) {
         var emptyCell = getEmptyCell(board)
         if (emptyCell.i === firstI && emptyCell.j === firstJ) {
             board[emptyCell.i][emptyCell.j].isMine = false
-        } else {
+        }
+        if (emptyCell.i !== firstI || emptyCell.j !== firstJ) {
             board[emptyCell.i][emptyCell.j].isMine = true
         }
     }
+}
+
+function updateLives(diff) {
+    gGame.lives -= diff
+
+    const elLives = document.querySelector('.lives span')
+    elLives.innerText = gGame.lives
 }
 
