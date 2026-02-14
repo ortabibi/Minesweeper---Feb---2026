@@ -23,6 +23,8 @@ var gBoard
 var firstClick = false
 var firstI
 var firstJ
+var gIntervalId
+var gStartTime
 
 
 function onInit() {
@@ -117,6 +119,7 @@ function onCellClicked(elCell, i, j) {
     if (gBoard[i][j].isMarked) return
 
     if (!firstClick) {
+        startStoper()
         firstClick = true
         firstI = i
         firstJ = j
@@ -131,6 +134,8 @@ function onCellClicked(elCell, i, j) {
         gBoard[i][j].isRevealed = false
 
         if (gGame.lives === 0) {
+            clearInterval(gIntervalId)
+            gIntervalId = null
             document.querySelector('.reset').innerHTML = SAD
             console.log('game over!')
             gGame.isOn = false
@@ -173,9 +178,12 @@ function expandReveal(board, elCell, i, j) {
 function resetGame() {
     console.log('the game has restarted');
     document.querySelector('.reset').innerHTML = NORMAL
+    document.querySelector('.stoper').innerHTML = '00:00'
     firstI = null
     firstJ = null
     firstClick = false
     document.querySelector('.lives span').innerHTML = 3
     gGame.lives = 3
+    clearInterval(gIntervalId)
+    gIntervalId = null
 }

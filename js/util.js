@@ -47,3 +47,16 @@ function updateLives(diff) {
     elLives.innerText = gGame.lives
 }
 
+function startStoper() {
+    gStartTime = Date.now();
+
+    gIntervalId = setInterval(() => {
+        const diff = Date.now() - gStartTime;
+
+        const seconds = Math.floor(diff / 1000);
+        const milliseconds = diff % 1000;
+
+        const elStopper = document.querySelector('.stoper');
+        elStopper.innerText = seconds + '.' + milliseconds;
+    }, 10);
+}
