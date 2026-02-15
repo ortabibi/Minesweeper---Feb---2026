@@ -25,10 +25,11 @@ function getEmptyCell(board) {
 
     const idx = getRandomIntInclusive(0, mines.length - 1)
     const randomCell = mines[idx]
+    mines.splice(idx,1)
     return randomCell
 }
 
-function addRandomMine(board, num) {
+function addRandomMines(board, num) {
     for (var i = 0; i < num; i++) {
         var emptyCell = getEmptyCell(board)
         if (emptyCell.i === firstI && emptyCell.j === firstJ) {
@@ -40,6 +41,7 @@ function addRandomMine(board, num) {
     }
 }
 
+// לתקן תבאג
 function updateLives(diff) {
     gGame.lives -= diff
 
@@ -59,4 +61,26 @@ function startStoper() {
         const elStopper = document.querySelector('.stoper');
         elStopper.innerText = seconds + '.' + milliseconds;
     }, 10);
+}
+
+function resetGame() {
+    console.log('the game has restarted');
+    document.querySelector('.reset').innerHTML = NORMAL
+    document.querySelector('.stoper').innerHTML = '00:00'
+    firstI = null
+    firstJ = null
+    firstClick = false
+    document.querySelector('.lives span').innerHTML = 3
+    gGame.lives = 3
+    clearInterval(gIntervalId)
+    gIntervalId = null
+    gGame.revealedCount = 0
+    gGame.markedCount = 0
+}
+
+function setLevel(size, mines) {
+    gLevel.SIZE = size
+    gLevel.MINES = mines
+    document.querySelector('.flags').innerHTML = gLevel.MINES
+    onInit()
 }

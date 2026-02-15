@@ -3,16 +3,14 @@ h1 {
 }
 
 table {
-    margin: 30px auto;
+    margin: 40px auto;
     border: 1px solid lightgray;
     border-collapse: collapse;
-    /* height: 350px;
-    width: 350px; */
 }
 
 .cell {
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 40px;
     text-align: center;
     vertical-align: middle;
     font-size: 24px;
@@ -21,11 +19,7 @@ table {
     border: 1px solid;
 }
 
-.cell:hover {
-    color: red;
-}
-
-td {
+td{
     background-color: lightgray;
 }
 
@@ -33,16 +27,7 @@ td {
     border-collapse: collapse;
 }
 
-.lives {
+.lives{
     font-size: 20px;
-    text-align: center;
-}
-
-.smiley-container {
-    margin: 10px;
-    text-align: center;
-}
-
-.button-container {
     text-align: center;
 }
