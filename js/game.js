@@ -187,3 +187,9 @@ function resetGame() {
     clearInterval(gIntervalId)
     gIntervalId = null
 }
+
+function setLevel(size, mines) {
+    gLevel.SIZE = size
+    gLevel.MINES = mines
+    onInit()
+}
