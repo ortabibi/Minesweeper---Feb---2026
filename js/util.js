@@ -25,18 +25,30 @@ function getEmptyCell(board) {
 
     const idx = getRandomIntInclusive(0, mines.length - 1)
     const randomCell = mines[idx]
-    mines.splice(idx,1)
+    mines.splice(idx, 1)
     return randomCell
 }
 
+// function addRandomMines(board, num) {
+//     for (var i = 0; i < num; i++) {
+//         var emptyCell = getEmptyCell(board)
+//         if (emptyCell.i === firstI && emptyCell.j === firstJ) {
+//             board[emptyCell.i][emptyCell.j].isMine = false
+//         }
+//         if (emptyCell.i !== firstI || emptyCell.j !== firstJ) {
+//             board[emptyCell.i][emptyCell.j].isMine = true
+//         }
+//     }
+// }
+
 function addRandomMines(board, num) {
-    for (var i = 0; i < num; i++) {
+    var count = 0
+    while (count < num) {
         var emptyCell = getEmptyCell(board)
-        if (emptyCell.i === firstI && emptyCell.j === firstJ) {
-            board[emptyCell.i][emptyCell.j].isMine = false
-        }
-        if (emptyCell.i !== firstI || emptyCell.j !== firstJ) {
+        if (!(emptyCell.i === firstI && emptyCell.j === firstJ)
+            && !board[emptyCell.i][emptyCell.j].isMine) {
             board[emptyCell.i][emptyCell.j].isMine = true
+            count++
         }
     }
 }
@@ -64,13 +76,13 @@ function startStoper() {
 }
 
 function resetGame() {
-    console.log('the game has restarted');
+    // console.log('the game has restarted');
     document.querySelector('.reset').innerHTML = NORMAL
     document.querySelector('.stoper').innerHTML = '00:00'
+    document.querySelector('.lives span').innerHTML = 3
     firstI = null
     firstJ = null
     firstClick = false
-    document.querySelector('.lives span').innerHTML = 3
     gGame.lives = 3
     clearInterval(gIntervalId)
     gIntervalId = null

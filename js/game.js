@@ -25,6 +25,8 @@ var firstI
 var firstJ
 var gIntervalId
 var gStartTime
+var hintClicked = false
+
 
 
 function onInit() {
@@ -119,7 +121,14 @@ function onCellClicked(elCell, i, j) {
     if (!gGame.isOn) return
     if (gBoard[i][j].isRevealed) return
     if (gBoard[i][j].isMarked) return
-    console.log(gBoard[i][j].minesAroundCount)
+
+    if (hintClicked) {
+        console.log('entered');
+        
+        getHints(gBoard, i, j)
+        return
+    }
+
     if (!firstClick) {
         startStoper()
         firstClick = true
@@ -128,7 +137,6 @@ function onCellClicked(elCell, i, j) {
         addRandomMines(gBoard, gLevel.MINES)
         setMinesNegsCountForBoard(gBoard)
     }
-
 
     if (gBoard[i][j].isMine) {
         updateLives(1)
@@ -202,6 +210,8 @@ function checkGameOver() {
     gGame.isOn = false
     document.querySelector('.reset').innerHTML = WIN
     console.log('you win!')
+    clearInterval(gIntervalId)
+    gIntervalId = null
 }
 
 function expandReveal(board, rowIdx, colIdx) {
@@ -220,4 +230,40 @@ function expandReveal(board, rowIdx, colIdx) {
     }
 }
 
+function getHints(board, i, j) {
+    if (!hintClicked) return
+    hintClicked = true
 
+    var hintArray = getHintsCells(board, i, j)
+    // renderBoard(board)
+
+    setTimeout(() => {
+        for (var k = 0; k < hintArray.length; k++) {
+            let hint = hintArray[k]
+            board[hint.i][hint.j].isRevealed = false
+        }
+        renderBoard(board)
+        hintClicked = false
+    }, 1000);
+}
+
+function getHintsCells(board, rowIdx, colIdx) {
+    var hints = []
+    for (let i = rowIdx - 1; i <= rowIdx + 1; i++) {
+        if (i < 0 || i >= board.length) continue
+
+        for (let j = colIdx - 1; j <= colIdx + 1; j++) {
+            if (j < 0 || j >= board[i].length) continue
+            if (i === rowIdx && j === colIdx) continue
+            var cell = board[i][j]
+            cell.isRevealed = true
+            hints.push({ i, j })
+        }
+    }
+    renderBoard(board)
+    return hints
+}
+
+function onHintButtonClicked() {
+    hintClicked = true
+}
