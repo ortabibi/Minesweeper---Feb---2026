@@ -11,7 +11,8 @@ const gGame = {
     revealedCount: 0,
     markedCount: 0,
     secsPassed: 0,
-    lives: 3
+    lives: 3,
+    hints: 3
 }
 
 const gLevel = {
@@ -117,14 +118,15 @@ function renderBoard(board) {
 }
 
 function onCellClicked(elCell, i, j) {
-
+    
     if (!gGame.isOn) return
     if (gBoard[i][j].isRevealed) return
     if (gBoard[i][j].isMarked) return
-
+    elCell.classList.add('on')
+    
     if (hintClicked) {
         console.log('entered');
-        
+
         getHints(gBoard, i, j)
         return
     }
@@ -161,8 +163,10 @@ function onCellClicked(elCell, i, j) {
     } else {
         if (gBoard[i][j].minesAroundCount === 0) {
             gBoard[i][j].isRevealed = true
+            // console.log(elCell)
             expandReveal(gBoard, i, j)
         } else {
+            // console.log(elCell)
             gBoard[i][j].isRevealed = true
             if (gBoard[i][j].isRevealed) gGame.revealedCount++
         }
@@ -221,18 +225,22 @@ function expandReveal(board, rowIdx, colIdx) {
         for (let j = colIdx - 1; j <= colIdx + 1; j++) {
             if (j < 0 || j >= board[i].length) continue
             if (i === rowIdx && j === colIdx) continue
-
-            // cell = board[i][j]
-            // if (board[i][j].isMine || board[i][j].isMarked || board[i][j].isRevealed) continue
-
-            board[i][j].isRevealed = true
+            if (board[i][j].isRevealed) continue
+            var cell = board[i][j]
+            cell.isRevealed = true
+            if (cell.minesAroundCount === 0) {
+                expandReveal(board, i, j)
+            }
         }
     }
 }
 
 function getHints(board, i, j) {
     if (!hintClicked) return
-    hintClicked = true
+
+    gGame.hints--
+    const elButtonSpan = document.querySelector('.hint-btn span')
+    elButtonSpan.innerHTML = gGame.hints
 
     var hintArray = getHintsCells(board, i, j)
     // renderBoard(board)
@@ -242,6 +250,8 @@ function getHints(board, i, j) {
             let hint = hintArray[k]
             board[hint.i][hint.j].isRevealed = false
         }
+        const elButton = document.querySelector('.hint-btn')
+        elButton.classList.remove('active')
         renderBoard(board)
         hintClicked = false
     }, 1000);
@@ -255,6 +265,7 @@ function getHintsCells(board, rowIdx, colIdx) {
         for (let j = colIdx - 1; j <= colIdx + 1; j++) {
             if (j < 0 || j >= board[i].length) continue
             if (i === rowIdx && j === colIdx) continue
+            if (board[i][j].isRevealed) continue
             var cell = board[i][j]
             cell.isRevealed = true
             hints.push({ i, j })
@@ -265,5 +276,10 @@ function getHintsCells(board, rowIdx, colIdx) {
 }
 
 function onHintButtonClicked() {
+    if (gGame.hints === 0) return
     hintClicked = true
+
+    const elButton = document.querySelector('.hint-btn')
+    elButton.classList.add('active')
+
 }

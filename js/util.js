@@ -53,7 +53,6 @@ function addRandomMines(board, num) {
     }
 }
 
-// לתקן תבאג
 function updateLives(diff) {
     gGame.lives -= diff
 
@@ -80,6 +79,7 @@ function resetGame() {
     document.querySelector('.reset').innerHTML = NORMAL
     document.querySelector('.stoper').innerHTML = '00:00'
     document.querySelector('.lives span').innerHTML = 3
+    document.querySelector('.hint-btn span').innerText = 3
     firstI = null
     firstJ = null
     firstClick = false
@@ -88,6 +88,7 @@ function resetGame() {
     gIntervalId = null
     gGame.revealedCount = 0
     gGame.markedCount = 0
+    gGame.hints = 3
 }
 
 function setLevel(size, mines) {

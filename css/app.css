@@ -46,3 +46,12 @@ td {
 .button-container {
     text-align: center;
 }
+
+.hint-btn.active {
+    background-color: bisque;
+}
+
+.on{
+    background-color: bisque;
+}
+
