@@ -5,7 +5,6 @@ const NORMAL = '&#128512;'
 const SAD = '&#128534;'
 const WIN = '&#128526;'
 
-
 const gGame = {
     isOn: false,
     revealedCount: 0,
@@ -27,6 +26,7 @@ var firstJ
 var gIntervalId
 var gStartTime
 var hintClicked = false
+var isBlack = false
 
 
 
@@ -85,13 +85,16 @@ function renderBoard(board) {
         for (let j = 0; j < board[0].length; j++) {
             const cell = board[i][j]
             var cellContent = ''
-            const className = `cell cell-${i}-${j}`
+            const className = `cell cell-${i}-${j}${cell.isRevealed ? ' on' : ''}`
 
             if (cell.isRevealed) {
                 if (cell.isMine) {
                     cellContent = MINE
                 } else {
                     cellContent = cell.minesAroundCount
+                    if (cell.minesAroundCount === 0) {
+                        cellContent = ''
+                    }
                 }
             }
             if (cell.isMarked) {
@@ -118,12 +121,12 @@ function renderBoard(board) {
 }
 
 function onCellClicked(elCell, i, j) {
-    
+
     if (!gGame.isOn) return
     if (gBoard[i][j].isRevealed) return
     if (gBoard[i][j].isMarked) return
     elCell.classList.add('on')
-    
+
     if (hintClicked) {
         console.log('entered');
 
@@ -215,6 +218,20 @@ function checkGameOver() {
     document.querySelector('.reset').innerHTML = WIN
     console.log('you win!')
     clearInterval(gIntervalId)
+    const bestTime = gGame.secsPassed
+    console.log(bestTime)
+    const currScore = localStorage.getItem("bestScore")
+    console.log(currScore);
+
+    if (currScore === null || bestTime < +currScore) {
+        console.log('hi');
+
+        localStorage.setItem("bestScore", bestTime)
+
+        const elTime = document.querySelector('.result span')
+        elTime.innerHTML = bestTime
+    }
+
     gIntervalId = null
 }
 
@@ -283,3 +300,6 @@ function onHintButtonClicked() {
     elButton.classList.add('active')
 
 }
+
+
+

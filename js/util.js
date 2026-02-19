@@ -71,6 +71,7 @@ function startStoper() {
 
         const elStopper = document.querySelector('.stoper');
         elStopper.innerText = seconds + '.' + milliseconds;
+        gGame.secsPassed = seconds
     }, 10);
 }
 
@@ -96,4 +97,18 @@ function setLevel(size, mines) {
     gLevel.MINES = mines
     document.querySelector('.flags').innerHTML = gLevel.MINES
     onInit()
+}
+
+function getDarkMode() {
+    if (!isBlack) {
+        document.querySelector('body').style.backgroundColor = 'black'
+        document.querySelector('body').style.color = 'white'
+        document.querySelector('.dark-mode').innerHTML = 'white'
+        isBlack = true
+    } else {
+        isBlack = false
+        document.querySelector('body').style.backgroundColor = 'white'
+        document.querySelector('body').style.color = 'black'
+        document.querySelector('.dark-mode').innerHTML = 'black'
+    }
 }

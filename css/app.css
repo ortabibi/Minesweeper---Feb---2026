@@ -51,7 +51,10 @@ td {
     background-color: bisque;
 }
 
-.on{
+.on {
     background-color: bisque;
 }
 
+.result {
+    text-align: center;
+}
