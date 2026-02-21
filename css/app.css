@@ -58,3 +58,17 @@ td {
 .result {
     text-align: center;
 }
+
+.bonus-container{
+    margin: 10px;
+    text-align: center;
+}
+
+.undo-btn{
+    background-color: orange;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 10px 20px;
+}

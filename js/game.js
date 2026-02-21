@@ -4,6 +4,7 @@ const FLAG = '&#9873;'
 const NORMAL = '&#128512;'
 const SAD = '&#128534;'
 const WIN = '&#128526;'
+const FIRE = '&#128293;'
 
 const gGame = {
     isOn: false,
@@ -18,6 +19,8 @@ const gLevel = {
     SIZE: 4,
     MINES: 3
 }
+
+const gUndoStack = []
 
 var gBoard
 var firstClick = false
@@ -50,7 +53,8 @@ function buildBoard() {
                 minesAroundCount: 4,
                 isRevealed: false,
                 isMine: false,
-                isMarked: false
+                isMarked: false,
+                isFire: false
             }
         }
     }
@@ -99,6 +103,8 @@ function renderBoard(board) {
             }
             if (cell.isMarked) {
                 cellContent = FLAG
+            } else if (cell.isFire) {
+                cellContent = FIRE
             }
             strHTML += `<td onclick="onCellClicked(this, ${i}, ${j})" 
             class="${className}">
@@ -121,6 +127,7 @@ function renderBoard(board) {
 }
 
 function onCellClicked(elCell, i, j) {
+    const currUndoStack = []
 
     if (!gGame.isOn) return
     if (gBoard[i][j].isRevealed) return
@@ -139,6 +146,7 @@ function onCellClicked(elCell, i, j) {
         firstClick = true
         firstI = i
         firstJ = j
+        currUndoStack.push({ i: firstI, j: firstJ })
         addRandomMines(gBoard, gLevel.MINES)
         setMinesNegsCountForBoard(gBoard)
     }
@@ -293,6 +301,7 @@ function getHintsCells(board, rowIdx, colIdx) {
 }
 
 function onHintButtonClicked() {
+    if (!firstClick) return
     if (gGame.hints === 0) return
     hintClicked = true
 
@@ -301,5 +310,41 @@ function onHintButtonClicked() {
 
 }
 
+function getMineExterminator() {
+    if (!firstClick) return
 
+    var count = 0
+    while (count < 3) {
+        var mineCell = getMinesIdx(gBoard)
+        gBoard[mineCell.i][mineCell.j].isMine = false
+        gBoard[mineCell.i][mineCell.j].isFire = true
+        gBoard[mineCell.i][mineCell.j].isRevealed = true
+        count++
+    }
+    setMinesNegsCountForBoard(gBoard)
+    renderBoard(gBoard)
 
+    const elFire = document.querySelector('.mine-destroyer')
+    elFire.disabled = true
+}
+
+function getMinesIdx(board) {
+    var minesIdx = []
+    for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board[0].length; j++) {
+            var cell = board[i][j]
+            if (cell.isMine) {
+                minesIdx.push({ i, j })
+            }
+        }
+    }
+
+    const idx = getRandomIntInclusive(0, minesIdx.length - 1)
+    const randomCell = minesIdx[idx]
+    minesIdx.splice(idx, 1)
+    return randomCell
+}
+
+function getUndoButton() {
+    console.log('hi');
+}

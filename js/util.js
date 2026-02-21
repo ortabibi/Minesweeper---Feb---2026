@@ -81,6 +81,7 @@ function resetGame() {
     document.querySelector('.stoper').innerHTML = '00:00'
     document.querySelector('.lives span').innerHTML = 3
     document.querySelector('.hint-btn span').innerText = 3
+    document.querySelector('.mine-destroyer').disabled = false
     firstI = null
     firstJ = null
     firstClick = false
