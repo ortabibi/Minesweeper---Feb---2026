@@ -91,6 +91,7 @@ function resetGame() {
     gGame.revealedCount = 0
     gGame.markedCount = 0
     gGame.hints = 3
+    gUndoStack.length = 0
 }
 
 function setLevel(size, mines) {
@@ -101,15 +102,17 @@ function setLevel(size, mines) {
 }
 
 function getDarkMode() {
+    var elColor = document.querySelector('.dark-btn')
+
     if (!isBlack) {
         document.querySelector('body').style.backgroundColor = 'black'
         document.querySelector('body').style.color = 'white'
-        document.querySelector('.dark-mode').innerHTML = 'white'
+        elColor.innerHTML = 'off'
         isBlack = true
     } else {
-        isBlack = false
-        document.querySelector('body').style.backgroundColor = 'white'
+        document.querySelector('body').style.backgroundColor = 'lightcyan'
         document.querySelector('body').style.color = 'black'
-        document.querySelector('.dark-mode').innerHTML = 'black'
+        elColor.innerHTML = 'on'
+        isBlack = false
     }
 }

@@ -6,7 +6,7 @@ const SAD = '&#128534;'
 const WIN = '&#128526;'
 const FIRE = '&#128293;'
 
-const gGame = {
+var gGame = {
     isOn: false,
     revealedCount: 0,
     markedCount: 0,
@@ -29,8 +29,10 @@ var firstJ
 var gIntervalId
 var gStartTime
 var hintClicked = false
+var megaHintClicked = false
 var isBlack = false
-
+var firstMegaI = null
+var firstMegaJ = null
 
 
 function onInit() {
@@ -59,8 +61,6 @@ function buildBoard() {
         }
     }
 
-    // board[2][3].isMine = true
-    // board[0][1].isMine = true
     return board
 }
 
@@ -127,7 +127,7 @@ function renderBoard(board) {
 }
 
 function onCellClicked(elCell, i, j) {
-    const currUndoStack = []
+    gUndoStack.push({ board: copyBoard(), game: copyGame() })
 
     if (!gGame.isOn) return
     if (gBoard[i][j].isRevealed) return
@@ -141,12 +141,27 @@ function onCellClicked(elCell, i, j) {
         return
     }
 
+    if (megaHintClicked) {
+        if (firstMegaI === null) {
+            firstMegaI = i
+            firstMegaJ = j
+        } else {
+            console.log(i);
+            console.log(j);
+
+            getMegaHint(gBoard, firstMegaI, i, firstMegaJ, j)
+
+            firstMegaI = null
+            firstMegaJ = null
+            megaHintClicked = false
+        }
+    }
+
     if (!firstClick) {
         startStoper()
         firstClick = true
         firstI = i
         firstJ = j
-        currUndoStack.push({ i: firstI, j: firstJ })
         addRandomMines(gBoard, gLevel.MINES)
         setMinesNegsCountForBoard(gBoard)
     }
@@ -183,11 +198,13 @@ function onCellClicked(elCell, i, j) {
         }
     }
 
-    renderBoard(gBoard)
     checkGameOver()
+    renderBoard(gBoard)
 }
 
 function onCellMarked(event, elCell, i, j) {
+    gUndoStack.push({ board: copyBoard(), game: copyGame() })
+
     const elFlag = document.querySelector('.flags')
 
     if (!gGame.isOn) return
@@ -243,7 +260,7 @@ function checkGameOver() {
     gIntervalId = null
 }
 
-function expandReveal(board, rowIdx, colIdx) {
+function expandReveal(board, rowIdx, colIdx,) {
     for (let i = rowIdx - 1; i <= rowIdx + 1; i++) {
         if (i < 0 || i >= board.length) continue
 
@@ -257,6 +274,46 @@ function expandReveal(board, rowIdx, colIdx) {
                 expandReveal(board, i, j)
             }
         }
+    }
+}
+
+function getUndoButton() {
+    if (gUndoStack.length === 0) return
+    var lastPlay = gUndoStack.pop()
+    gBoard = lastPlay.board
+    gGame = lastPlay.game
+
+    renderBoard(gBoard)
+}
+
+function copyBoard() {
+    const boardSize = gLevel.SIZE
+    const copyBoard = []
+
+    for (var i = 0; i < boardSize; i++) {
+        copyBoard.push([])
+
+        for (var j = 0; j < boardSize; j++) {
+            copyBoard[i][j] = {
+                minesAroundCount: gBoard[i][j].minesAroundCount,
+                isRevealed: gBoard[i][j].isRevealed,
+                isMine: gBoard[i][j].isMine,
+                isMarked: gBoard[i][j].isMarked,
+                isFire: gBoard[i][j].isFire
+            }
+        }
+    }
+
+    return copyBoard
+}
+
+function copyGame() {
+    return {
+        isOn: gGame.isOn,
+        revealedCount: gGame.revealedCount,
+        markedCount: gGame.markedCount,
+        lives: gGame.lives,
+        hints: gGame.hints
     }
 }
 
@@ -289,7 +346,7 @@ function getHintsCells(board, rowIdx, colIdx) {
 
         for (let j = colIdx - 1; j <= colIdx + 1; j++) {
             if (j < 0 || j >= board[i].length) continue
-            if (i === rowIdx && j === colIdx) continue
+            // if (i === rowIdx && j === colIdx) continue
             if (board[i][j].isRevealed) continue
             var cell = board[i][j]
             cell.isRevealed = true
@@ -345,6 +402,33 @@ function getMinesIdx(board) {
     return randomCell
 }
 
-function getUndoButton() {
-    console.log('hi');
+function onMegaHintButtonClicked() {
+    megaHintClicked = true
+}
+
+function getMegaHint(board, rowIdxStart, rowIdxEnd, colIdxStart, colIdxEnd) {
+    var megaHintCells = []
+    for (let i = rowIdxStart; i <= rowIdxEnd; i++) {
+        for (let j = colIdxStart; j <= colIdxEnd; j++) {
+            // if (board[i][j].isRevealed) continue
+            if (board[i][j].isRevealed && !(rowIdxStart === i && colIdxStart === j)) continue
+
+            var cell = board[i][j]
+            cell.isRevealed = true
+            megaHintCells.push({ i, j })
+            console.log(i,j);
+
+        }
+    }
+
+    renderBoard(board)
+
+    setTimeout(() => {
+        for (let i = 0; i < megaHintCells.length; i++) {
+            const hintCell = megaHintCells[i]
+            const cell = board[hintCell.i][hintCell.j]
+            cell.isRevealed = false
+        }
+        renderBoard(board)
+    }, 2000);
 }

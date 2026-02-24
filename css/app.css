@@ -1,5 +1,5 @@
-body{
-    background-color: rgb(245, 247, 249);
+body {
+    background-color: lightcyan;
 }
 
 h1 {
@@ -63,16 +63,21 @@ td {
     text-align: center;
 }
 
-.bonus-container{
+.bonus-container {
     margin: 10px;
     text-align: center;
 }
 
-.undo-btn{
+.undo-btn {
     background-color: orange;
     border-radius: 5px;
     border: none;
     color: white;
     cursor: pointer;
     padding: 10px 20px;
+}
+
+body.dark {
+    background-color: black;
+    color: white;
 }
