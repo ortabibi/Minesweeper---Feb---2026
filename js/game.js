@@ -283,6 +283,9 @@ function getUndoButton() {
     gBoard = lastPlay.board
     gGame = lastPlay.game
 
+document.querySelector('.lives span').innerHTML = gGame.lives
+document.querySelector('.flags').innerHTML = gLevel.MINES
+
     renderBoard(gBoard)
 }
 
