@@ -107,12 +107,12 @@ function getDarkMode() {
     if (!isBlack) {
         document.querySelector('body').style.backgroundColor = 'black'
         document.querySelector('body').style.color = 'white'
-        elColor.innerHTML = 'off'
+        elColor.innerHTML = 'on'
         isBlack = true
     } else {
         document.querySelector('body').style.backgroundColor = 'lightcyan'
         document.querySelector('body').style.color = 'black'
-        elColor.innerHTML = 'on'
+        elColor.innerHTML = 'off'
         isBlack = false
     }
 }
